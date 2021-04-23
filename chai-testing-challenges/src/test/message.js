@@ -25,25 +25,53 @@ after((done) => {
   done()
 })
 
+const SAMPLE_OBJECT_ID = "aaaaaaaaaaaa"
 
 describe('Message API endpoints', () => {
     beforeEach((done) => {
         // TODO: add any beforeEach code here
-        done()
+        const sampleUser = new User({
+            username: "username",
+            password: "password",
+        })
+        sampleUser.save()
+        const sampleMessage = new Message({
+            title: "title",
+            body: "body",
+            author: sampleUser._id
+        })
+        sampleMessage.save()
+        .then(() => {
+            done()
+        })
+        
     })
 
     afterEach((done) => {
         // TODO: add any afterEach code here
-        done()
+        Message.deleteOne({ title: 'mytitle' })
+        User.deleteOne({username : 'newuser'})
+        .then(() => {
+            done()
+        })
     })
 
     it('should load all messages', (done) => {
         // TODO: Complete this
-        done()
+        chai.request(app)
+        .get('/')
+        .end((err, res) => {
+            if(err) { done(err) }
+            expect(res).to.have.status(200)
+            expect(res.body.messages).to.be.an("array")
+            done()
+        })
     })
 
     it('should get one specific message', (done) => {
         // TODO: Complete this
+        chai.request(app)
+        .get('/messages/${SAMPLE_OBJECT_ID')
         done()
     })
 
